@@ -10,6 +10,19 @@ The project demonstrates a clean separation between domain, infrastructure and p
 
 - `src/` — application source code (domain, infrastructure, presentation)
 - `prisma/schema.prisma` — Prisma schema for PostgreSQL
+
+# NOC
+
+NOC — Network Operations Center (lightweight checks & logging)
+
+NOC is a small Node.js TypeScript project that performs periodic health checks against services and records results into multiple storage backends (file system, MongoDB and PostgreSQL). It can also send email reports containing collected logs.
+
+The project demonstrates a clean separation between domain, infrastructure and presentation layers, and uses Prisma for PostgreSQL models and Mongoose for MongoDB models.
+
+## Contents
+
+- `src/` — application source code (domain, infrastructure, presentation)
+- `prisma/schema.prisma` — Prisma schema for PostgreSQL
 - `docker-compose.yml` and `docker-compose.test.yml` — Docker Compose setups (databases for dev/test)
 - `logs/` — runtime log files (created by the file system datasource)
 
@@ -20,64 +33,51 @@ The project demonstrates a clean separation between domain, infrastructure and p
 - Email reports with attached log files using `nodemailer`.
 - TypeScript, Jest tests, and Prisma client generation.
 
-## Quick start (orden recomendado)
+## Quick start (recommended order)
 
-Sigue este orden para poner el proyecto en funcionamiento de forma segura y reproducible:
+Follow this order to get the project running in a safe and reproducible way:
 
-1. Instalar dependencias
+1. Install dependencies
 
 ```powershell
 npm install
 ```
 
-2. Preparar el archivo de variables de entorno
+2. Prepare environment variables file
 
-Antes de arrancar Docker o Prisma, crea un archivo `.env` (o `.env.test` para pruebas) con las variables listadas en la sección "Environment variables". Por ejemplo puedes copiar y adaptar el ejemplo proporcionado en esta documentación.
+Before starting Docker or Prisma, create a `.env` file (or `.env.test` for tests) with the variables listed in the "Environment variables" section. You can copy and adapt the example provided below.
 
-3. Levantar los servicios de soporte con Docker (bases de datos)
+3. Start supporting services with Docker (databases)
 
 ```powershell
-# Levanta los servicios definidos en docker-compose.yml (o usa docker-compose.test.yml si prefieres el entorno de pruebas)
+# Start services defined in docker-compose.yml (or use docker-compose.test.yml for the test environment)
 docker compose up -d
 
-# Si usas el archivo de pruebas y un .env.test:
+# If using the test compose file with .env.test:
 docker compose -f docker-compose.test.yml --env-file .env.test up -d
 ```
 
-4. Configurar Prisma (generar cliente y aplicar migraciones)
+4. Configure Prisma (generate client and apply migrations)
 
-Genera el cliente de Prisma y crea/aplica las migraciones. Ejecuta estos comandos desde la raíz del proyecto:
+Generate the Prisma client and create/apply migrations. Run these commands from the project root:
 
 ```powershell
-# Generar el cliente (necesario tras cambiar el schema o en el primer checkout)
+# Generate the client (required after schema changes or on first checkout)
 npm run prisma:generate
 
-# Crear y aplicar migraciones de desarrollo (elige un nombre para la migración, por ejemplo "init")
+# Create and apply development migrations (choose a name, e.g. "init")
 npm run prisma:migrate
-# o directamente
+# or directly
 npx prisma migrate dev --name init
 ```
 
-5. Ejecutar en modo desarrollo
+5. Run in development mode
 
 ```powershell
 npm run dev
 ```
 
-El servidor arrancará y el `Server.start()` creará el job de cron que ejecuta las comprobaciones y persiste los logs en los backends configurados.
-
-## Scripts
-
-The important npm scripts are defined in `package.json`:
-
-- `npm run dev` — run the app using `tsx` (watch-friendly)
-- `npm run build` — compile TypeScript into `dist/` (uses `tsc`)
-- `npm start` — build then run `node dist/app.js`
-- `npm run test` — start test containers from `docker-compose.test.yml` and run Jest
-- `npm run prisma:generate` — generate Prisma client
-- `npm run prisma:migrate` — run Prisma migrations (development)
-
-## Environment variables
+The server will start and `Server.start()` will create the cron job that runs the checks and persists logs to the configured backends.
 
 This project uses `env-var` and requires the following environment variables. Example values are taken from the test plugin and may be used in `.env` or `.env.test` files.
 
