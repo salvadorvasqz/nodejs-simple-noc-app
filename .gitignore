@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.env
+/mongo/
+logs/
+/postgres/
+/src/generated/prisma
+postgres-test/
+mongo-test/
+coverage
